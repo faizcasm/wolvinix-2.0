@@ -15,6 +15,7 @@ interface DropzoneProps {
   label?: string;
   hint?: string;
   icon?: ReactNode;
+  compact?: boolean;
   disabled?: boolean;
   className?: string;
 }
@@ -27,6 +28,7 @@ export function Dropzone({
   label,
   hint,
   icon,
+  compact,
   disabled,
   className,
 }: DropzoneProps) {
@@ -92,7 +94,8 @@ export function Dropzone({
         onDrop={handleDrop}
         aria-label={label ?? "Choose files"}
         className={cn(
-          "flex w-full flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed px-6 py-11 text-center transition-all duration-200",
+          "flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed text-center transition-all duration-200",
+          compact ? "gap-1.5 px-4 py-5" : "gap-2.5 px-6 py-11",
           "focus-visible:outline-brand-500 focus-visible:outline-2 focus-visible:outline-offset-2",
           dragging
             ? "border-brand-500 bg-brand-500/10 scale-[1.01]"
@@ -102,7 +105,8 @@ export function Dropzone({
       >
         <span
           className={cn(
-            "grid size-12 place-items-center rounded-2xl transition-colors",
+            "grid place-items-center rounded-2xl transition-colors",
+            compact ? "size-9" : "size-12",
             dragging ? "bg-brand-500 text-white" : "bg-brand-500/10 text-brand-500",
           )}
           aria-hidden="true"
@@ -230,7 +234,10 @@ export function ToolProgress({
     <div className="space-y-1.5" aria-live="polite">
       <div className="flex items-center justify-between gap-3 text-xs">
         <span className="text-muted flex min-w-0 items-center gap-1.5">
-          <Loader2 className="text-brand-500 h-3.5 w-3.5 shrink-0 animate-spin" aria-hidden="true" />
+          <Loader2
+            className="text-brand-500 h-3.5 w-3.5 shrink-0 animate-spin"
+            aria-hidden="true"
+          />
           <span className="truncate">{label || "Working…"}</span>
         </span>
         <span className="text-subtle shrink-0 tabular-nums">{pct}%</span>

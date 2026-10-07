@@ -103,7 +103,8 @@ function PodiumCard({
     >
       {isFirst && (
         <span className="border-warning/40 bg-warning/15 text-warning mb-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-widest uppercase">
-          <Crown className="h-3 w-3" aria-hidden="true" /> Champion
+          <Crown className="h-3 w-3" aria-hidden="true" />
+          <span className="hidden sm:inline">Champion</span>
         </span>
       )}
 
@@ -142,7 +143,7 @@ function PodiumCard({
       <p
         className={cn(
           "font-display font-bold tabular-nums",
-          isFirst ? "text-xl sm:text-2xl" : "text-base sm:text-lg",
+          isFirst ? "text-lg sm:text-2xl" : "text-base sm:text-lg",
         )}
       >
         {row.totalScore.toLocaleString()}
@@ -362,7 +363,7 @@ export default function LeaderboardPage() {
                 <PodiumCard
                   row={rows[1]}
                   place={2}
-                  isMe={rows[1].user._id === meId}
+                  isMe={Boolean(meId) && rows[1].user._id === meId}
                   delay={reduceMotion ? 0 : 0.12}
                   reduceMotion={reduceMotion}
                 />
@@ -371,7 +372,7 @@ export default function LeaderboardPage() {
                 <PodiumCard
                   row={first}
                   place={1}
-                  isMe={first.user._id === meId}
+                  isMe={Boolean(meId) && first.user._id === meId}
                   delay={reduceMotion ? 0 : 0.22}
                   reduceMotion={reduceMotion}
                 />
@@ -380,7 +381,7 @@ export default function LeaderboardPage() {
                 <PodiumCard
                   row={rows[2]}
                   place={3}
-                  isMe={rows[2].user._id === meId}
+                  isMe={Boolean(meId) && rows[2].user._id === meId}
                   delay={reduceMotion ? 0 : 0.32}
                   reduceMotion={reduceMotion}
                 />
@@ -430,12 +431,7 @@ export default function LeaderboardPage() {
                     </span>
 
                     <div className="flex min-w-0 items-center gap-3">
-                      <Avatar
-                        src={row.user.profilePic}
-                        name={row.user.name}
-                        size="sm"
-                        className="sm:hidden"
-                      />
+                      <Avatar src={row.user.profilePic} name={row.user.name} size="sm" />
                       <div className="min-w-0 flex-1">
                         <span className="flex min-w-0 items-center gap-1.5">
                           {row.hasProfile ? (

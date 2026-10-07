@@ -18,7 +18,11 @@ export function baseName(name: string): string {
 
 /** Guarantees a single trailing extension on a user-provided file name. */
 export function withExtension(name: string, extension: string): string {
-  const clean = name.trim().replace(/[\\/:*?"<>|]+/g, "-").slice(0, 80) || "wolvinix";
+  const clean =
+    name
+      .trim()
+      .replace(/[\\/:*?"<>|]+/g, "-")
+      .slice(0, 80) || "wolvinix";
   const pattern = new RegExp(`\\.${extension}$`, "i");
   return pattern.test(clean) ? clean : `${clean}.${extension}`;
 }
@@ -66,6 +70,13 @@ export function toJpegDataUrl(image: HTMLImageElement, quality = 0.92): string {
   if (!context) throw new Error("Canvas is unavailable in this browser");
   context.drawImage(image, 0, 0);
   return canvas.toDataURL("image/jpeg", quality);
+}
+
+/** Copies bytes into a standalone buffer so the Blob gets a definite type. */
+export function bytesToBlob(bytes: Uint8Array, type: string): Blob {
+  const buffer = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(buffer).set(bytes);
+  return new Blob([buffer], { type });
 }
 
 export function downloadBlob(blob: Blob, filename: string): void {
