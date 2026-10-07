@@ -1,0 +1,36 @@
+{
+  "name": "Wolvinix — Social Network for Gamers",
+  "short_name": "Wolvinix",
+  "description": "Share clips, form clans, track game stats, chat in real time and climb the leaderboard.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "background_color": "#07070d",
+  "theme_color": "#07070d",
+  "categories": ["social", "games", "entertainment"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Feed", "url": "/" },
+    { "name": "Messages", "url": "/messages" },
+    { "name": "Clans", "url": "/clans" },
+    { "name": "Leaderboard", "url": "/leaderboard" }
+  ]
+}

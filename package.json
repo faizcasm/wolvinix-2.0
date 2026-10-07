@@ -1,0 +1,35 @@
+{
+  "name": "wolvinix",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Wolvinix 2.0 — the social network built for gamers. Feed, clans, squads, live chat, game stats and more.",
+  "license": "MIT",
+  "author": "Faizan Hameed",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c magenta,cyan \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "npm run dev --workspace @wolvinix/api",
+    "dev:web": "npm run dev --workspace @wolvinix/web",
+    "build": "npm run build --workspace @wolvinix/web",
+    "start": "npm run start --workspace @wolvinix/api",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "9.2.4",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+# Superseded runs on the same ref are cancelled to save minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+  NODE_OPTIONS: --max-old-space-size=4096
+
+jobs:
+  api:
+    name: API · lint, typecheck, test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck --workspace @wolvinix/api
+
+      - name: Lint
+        run: npm run lint --workspace @wolvinix/api
+
+      - name: Test
+        run: npm test --workspace @wolvinix/api
+
+      - name: Build
+        run: npm run build --workspace @wolvinix/api
+
+  web:
+    name: Web · lint, typecheck, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck --workspace @wolvinix/web
+
+      - name: Lint
+        run: npm run lint --workspace @wolvinix/web
+
+      - name: Build
+        run: npm run build --workspace @wolvinix/web
+
+      - name: Upload bundle report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: apps/web/dist
+          retention-days: 7
+          if-no-files-found: ignore
+
+  repo-hygiene:
+    name: Repo · formatting & secrets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Ensure no secrets are committed
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -E '(^|/)\.env$|\.pem$|id_rsa|\.p12$|\.pfx$'; then
+            echo "::error::Secret-looking files are tracked in git."
+            exit 1
+          fi
+          echo "No secret files tracked."
